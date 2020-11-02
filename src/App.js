@@ -1,11 +1,20 @@
+import { useState } from 'react'
+import Clarifai from 'clarifai'
 import Particles from 'react-tsparticles'
 import Navigation from './components/Navigation/Navigation'
 import Logo from './components/Logo/Logo'
 import Rank from './components/Rank/Rank'
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
+import ImageRecognition from './components/ImageRecognition/ImageRecognition'
 import './App.css'
 
 function App() {
+	const [inputValue, setInputValue] = useState('')
+
+	const app = new Clarifai.App({
+		apiKey: '18174d644d1e4906aab5678236919717',
+	})
+
 	const particlesOptions = {
 		fpsLimit: 60,
 		interactivity: {
@@ -78,15 +87,54 @@ function App() {
 		detectRetina: true,
 	}
 
+	const handleInputChange = (event) => {
+		console.log(event.target.value)
+	}
+
+	const handleImageSubmit = () => {
+		console.log('Image submitted')
+		app.models
+			.initModel({
+				id: Clarifai.GENERAL_MODEL,
+				version: 'aa7f35c01e0642fda5cf400f543e7c40',
+			})
+			.then((generalModel) => {
+				return generalModel.predict(
+					'https://images.unsplash.com/photo-1568967729548-e3dbad3d37e0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+				)
+			})
+			.then((response) => {
+				console.log(response)
+				var concepts = response['outputs'][0]['data']['concepts']
+				console.log(concepts)
+			})
+
+		// app.models
+		// 	.predict(Clarifai.GENERAL_MODEL, { base64: 'G7p3m95uAl...' })
+		// 	.then(
+		// 		function (response) {
+		// 			// do something with response
+		// 			console.log(response)
+		// 		},
+		// 		function (err) {
+		// 			// there was an error
+		// 			console.log(err.response)
+		// 		}
+		// 	)
+	}
+
 	return (
 		<div className='App'>
 			<Particles className='particles' options={particlesOptions} />
 			<Navigation />
 			<Logo />
 			<Rank />
-			<ImageLinkForm />
-			{/*
-     <ImageRecognition /> */}
+			<ImageLinkForm
+				handleInputChange={handleInputChange}
+				handleImageSubmit={handleImageSubmit}
+			/>
+
+			<ImageRecognition />
 		</div>
 	)
 }
