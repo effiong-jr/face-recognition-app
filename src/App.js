@@ -5,11 +5,13 @@ import Navigation from './components/Navigation/Navigation'
 import Logo from './components/Logo/Logo'
 import Rank from './components/Rank/Rank'
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
-import ImageRecognition from './components/ImageRecognition/ImageRecognition'
+import FaceRecognition from './components/FaceRecognition/FaceRecognition'
 import './App.css'
 
 function App() {
 	const [inputValue, setInputValue] = useState('')
+	const [imageUrl, setImageUrl] = useState('')
+	const [box, setBox] = useState({})
 
 	const app = new Clarifai.App({
 		apiKey: '18174d644d1e4906aab5678236919717',
@@ -88,39 +90,41 @@ function App() {
 	}
 
 	const handleInputChange = (event) => {
-		console.log(event.target.value)
+		setInputValue(event.target.value)
+	}
+
+	const calculateFaceLocation = (data) => {
+		const clarifaiFace =
+			data.outputs[0].data.regions[0].region_info.bounding_box
+
+		const image = document.getElementById('inputImage')
+		const width = Number(image.width)
+		const height = Number(image.height)
+
+		return {
+			leftCol: clarifaiFace.left_col * width,
+			topRow: clarifaiFace.top_row * height,
+			rightCol: width - clarifaiFace.right_col * width,
+			bottomRow: height - clarifaiFace.bottom_row * height,
+		}
+	}
+
+	const displayFaceBox = (box) => {
+		console.log(box)
+		setBox(box)
 	}
 
 	const handleImageSubmit = () => {
-		console.log('Image submitted')
+		setImageUrl(inputValue)
 		app.models
-			.initModel({
-				id: Clarifai.GENERAL_MODEL,
-				version: 'aa7f35c01e0642fda5cf400f543e7c40',
-			})
-			.then((generalModel) => {
-				return generalModel.predict(
-					'https://images.unsplash.com/photo-1568967729548-e3dbad3d37e0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
-				)
-			})
+			.predict(Clarifai.FACE_DETECT_MODEL, inputValue)
 			.then((response) => {
-				console.log(response)
-				var concepts = response['outputs'][0]['data']['concepts']
-				console.log(concepts)
+				// do something with response
+				displayFaceBox(calculateFaceLocation(response))
 			})
-
-		// app.models
-		// 	.predict(Clarifai.GENERAL_MODEL, { base64: 'G7p3m95uAl...' })
-		// 	.then(
-		// 		function (response) {
-		// 			// do something with response
-		// 			console.log(response)
-		// 		},
-		// 		function (err) {
-		// 			// there was an error
-		// 			console.log(err.response)
-		// 		}
-		// 	)
+			.catch((error) => {
+				console.log(error.response)
+			})
 	}
 
 	return (
@@ -134,7 +138,7 @@ function App() {
 				handleImageSubmit={handleImageSubmit}
 			/>
 
-			<ImageRecognition />
+			<FaceRecognition box={box} imageUrl={imageUrl} />
 		</div>
 	)
 }
