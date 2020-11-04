@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Clarifai from 'clarifai'
 import Particles from 'react-tsparticles'
 import Navigation from './components/Navigation/Navigation'
+import Signin from './components/Signin/Signin'
+import Register from './components/Register/Register'
 import Logo from './components/Logo/Logo'
 import Rank from './components/Rank/Rank'
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
@@ -12,6 +14,7 @@ function App() {
 	const [inputValue, setInputValue] = useState('')
 	const [imageUrl, setImageUrl] = useState('')
 	const [box, setBox] = useState({})
+	const [route, setRoute] = useState('signin')
 
 	const app = new Clarifai.App({
 		apiKey: '18174d644d1e4906aab5678236919717',
@@ -127,18 +130,31 @@ function App() {
 			})
 	}
 
+	const onRouteChange = (route) => {
+		// event.preventDefault()
+		setRoute(route)
+	}
+
 	return (
 		<div className='App'>
 			<Particles className='particles' options={particlesOptions} />
-			<Navigation />
-			<Logo />
-			<Rank />
-			<ImageLinkForm
-				handleInputChange={handleInputChange}
-				handleImageSubmit={handleImageSubmit}
-			/>
+			{route === 'home' ? (
+				<>
+					<Navigation onRouteChange={onRouteChange} />
+					<Logo />
+					<Rank />
+					<ImageLinkForm
+						handleInputChange={handleInputChange}
+						handleImageSubmit={handleImageSubmit}
+					/>
 
-			<FaceRecognition box={box} imageUrl={imageUrl} />
+					<FaceRecognition box={box} imageUrl={imageUrl} />
+				</>
+			) : route === 'signin' ? (
+				<Signin onRouteChange={onRouteChange} />
+			) : (
+				<Register onRouteChange={onRouteChange} />
+			)}
 		</div>
 	)
 }
