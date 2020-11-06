@@ -15,6 +15,7 @@ function App() {
 	const [imageUrl, setImageUrl] = useState('')
 	const [box, setBox] = useState({})
 	const [route, setRoute] = useState('signin')
+	const [user, setUser] = useState(null)
 
 	const app = new Clarifai.App({
 		apiKey: '18174d644d1e4906aab5678236919717',
@@ -113,7 +114,6 @@ function App() {
 	}
 
 	const displayFaceBox = (box) => {
-		console.log(box)
 		setBox(box)
 	}
 
@@ -126,12 +126,19 @@ function App() {
 				displayFaceBox(calculateFaceLocation(response))
 			})
 			.catch((error) => {
-				console.log(error.response)
+				console.log('Error')
 			})
 	}
 
-	const onRouteChange = (route) => {
-		// event.preventDefault()
+	const onRouteChange = (route, userDetails = null) => {
+		if (userDetails !== null) {
+			setUser(userDetails)
+		}
+
+		if (route === 'signin') {
+			setImageUrl('')
+		}
+
 		setRoute(route)
 	}
 
@@ -142,7 +149,7 @@ function App() {
 				<>
 					<Navigation onRouteChange={onRouteChange} />
 					<Logo />
-					<Rank />
+					<Rank user={user} />
 					<ImageLinkForm
 						handleInputChange={handleInputChange}
 						handleImageSubmit={handleImageSubmit}

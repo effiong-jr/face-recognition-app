@@ -16,7 +16,7 @@ const Register = ({ onRouteChange }) => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data.message === 'success') {
-					onRouteChange('home')
+					onRouteChange('home', data.user)
 				} else {
 					console.log(data)
 				}

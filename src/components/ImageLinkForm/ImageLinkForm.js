@@ -2,7 +2,7 @@ const ImageLinkForm = ({ handleInputChange, handleImageSubmit }) => {
 	return (
 		<div className='f3'>
 			<p>
-				This magic brain will detect faces in your pictures. Give it a
+				This magic brain will detect a face in your pictures. Give it a
 				try.
 			</p>
 			<div className='center '>

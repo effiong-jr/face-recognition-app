@@ -16,7 +16,7 @@ const Signin = ({ onRouteChange }) => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data.message === 'Success') {
-					onRouteChange('home')
+					onRouteChange('home', data.user)
 				}
 			})
 	}
