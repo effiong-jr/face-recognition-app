@@ -16,6 +16,7 @@ function App() {
 	const [box, setBox] = useState({})
 	const [route, setRoute] = useState('signin')
 	const [user, setUser] = useState(null)
+	const [entries, setEntries] = useState(0)
 
 	const app = new Clarifai.App({
 		apiKey: '18174d644d1e4906aab5678236919717',
@@ -123,11 +124,21 @@ function App() {
 			.predict(Clarifai.FACE_DETECT_MODEL, inputValue)
 			.then((response) => {
 				// do something with response
+				if (response) {
+					fetch('http://localhost:5000/image', {
+						method: 'put',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ id: user.id }),
+					})
+						.then((response) => response.json())
+						.then((data) => setEntries(data.entries))
+				}
+
 				displayFaceBox(calculateFaceLocation(response))
 			})
-			.catch((error) => {
-				console.log('Error')
-			})
+		// .catch((error) => {
+		// 	console.log('Error')
+		// })
 	}
 
 	const onRouteChange = (route, userDetails = null) => {
@@ -149,7 +160,7 @@ function App() {
 				<>
 					<Navigation onRouteChange={onRouteChange} />
 					<Logo />
-					<Rank user={user} />
+					<Rank user={user} entries={entries} />
 					<ImageLinkForm
 						handleInputChange={handleInputChange}
 						handleImageSubmit={handleImageSubmit}
