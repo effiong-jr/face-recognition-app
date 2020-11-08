@@ -131,7 +131,7 @@ function App() {
 						body: JSON.stringify({ id: user.id }),
 					})
 						.then((response) => response.json())
-						.then((data) => setEntries(data.entries))
+						.then((entries) => setEntries(entries))
 				}
 
 				displayFaceBox(calculateFaceLocation(response))
@@ -144,6 +144,7 @@ function App() {
 	const onRouteChange = (route, userDetails = null) => {
 		if (userDetails !== null) {
 			setUser(userDetails)
+			setEntries(userDetails.entries)
 		}
 
 		if (route === 'signin') {
