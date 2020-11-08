@@ -144,6 +144,7 @@ function App() {
 	const onRouteChange = (route, userDetails = null) => {
 		if (userDetails !== null) {
 			setUser(userDetails)
+			setEntries(userDetails.entries)
 		}
 
 		if (route === 'signin') {
