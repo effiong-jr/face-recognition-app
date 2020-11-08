@@ -131,7 +131,7 @@ function App() {
 						body: JSON.stringify({ id: user.id }),
 					})
 						.then((response) => response.json())
-						.then((data) => setEntries(data.entries))
+						.then((entries) => setEntries(entries))
 				}
 
 				displayFaceBox(calculateFaceLocation(response))
