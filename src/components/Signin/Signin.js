@@ -17,10 +17,8 @@ const Signin = ({ onRouteChange }) => {
 			.then((data) => {
 				if (data.hasOwnProperty('user')) {
 					onRouteChange('home', data.user)
-				} else if (data.message) {
-					alert(data.message)
 				} else {
-					alert('Enter sign in details.')
+					console.log(data)
 				}
 			})
 	}
