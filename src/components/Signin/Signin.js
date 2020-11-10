@@ -8,7 +8,7 @@ const Signin = ({ onRouteChange }) => {
 	const handleSignin = (event) => {
 		event.preventDefault()
 
-		fetch('https://floating-sierra-74889.herokuapp.com/signin', {
+		fetch('http://localhost:5000/signin', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password }),
