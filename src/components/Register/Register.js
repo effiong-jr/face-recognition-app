@@ -8,7 +8,7 @@ const Register = ({ onRouteChange }) => {
 	const handleRegister = (event) => {
 		event.preventDefault()
 
-		fetch('http://localhost:5000/register', {
+		fetch('https://floating-sierra-74889.herokuapp.com/register', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ name, email, password }),
